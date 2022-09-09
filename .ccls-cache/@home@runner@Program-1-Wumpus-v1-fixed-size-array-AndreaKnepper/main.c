@@ -93,14 +93,6 @@ void randomSetup(int array[6]) {
   }
 }
 
-int checkValid(int var[6]) {
-  int valid = 0;
-  for (int i = 0; i < 6; i++)
-    if (var[i] > 0 && var[i] < 20) {
-      valid++;
-    }
-  return valid;
-}
 
 int main(void) {
 
@@ -115,9 +107,14 @@ int main(void) {
   char playerMove;
   int desiredRoom; // must check that player's move is valid before moving there
   int moveCount = 1; // counts number of player moves
-  int check[6];
+ 
 
-  int map[21][3] = {{0, 0, 0}, {2, 5, 8}, {1, 3, 10}, {2, 12, 4}, {3, 5, 15}, {1, 4, 6}, {5, 7, 15}, {6, 8, 17}, {1, 7, 9},    {8, 10, 18},  {2, 11, 9},  {10, 12, 19}, {3, 13, 11},  {12, 14, 20}, {4, 15, 13}, {6, 16, 14}, {15, 17, 20}, {7, 18, 16}, {9, 19, 17}, {11, 20, 18}, {13, 16, 19}};
+  int map[21][3] = {{0, 0, 0},    {2, 5, 8},    {1, 3, 10},  {2, 12, 4},
+                    {3, 5, 15},   {1, 4, 6},    {5, 7, 15},  {6, 8, 17},
+                    {1, 7, 9},    {8, 10, 18},  {2, 11, 9},  {10, 12, 19},
+                    {3, 13, 11},  {12, 14, 20}, {4, 15, 13}, {6, 16, 14},
+                    {15, 17, 20}, {7, 18, 16},  {9, 19, 17}, {11, 20, 18},
+                    {13, 16, 19}};
   // run until the player enters 'x' or 'X'
   while (playerMove != 'x' && playerMove != 'X') {
     // display instructions
@@ -173,8 +170,9 @@ int main(void) {
       printf("Enter the room locations (1..20) for player, wumpus, pit1, and "
              "pit2: \n"
              "\n");
-        scanf("%d %d %d %d", &gameObjects[5], &gameObjects[4], &gameObjects[2], &gameObjects[3]);
-    
+        scanf(" %d", &gameObjects);
+      }
+
     // if wumpus room is even, player dies
     if (gameObjects[5] == gameObjects[4] && gameObjects[4] % 2 == 0) {
       printf(
