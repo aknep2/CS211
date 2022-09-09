@@ -93,7 +93,46 @@ void randomSetup(int array[6]) {
   }
 }
 
-
+void optionD() {
+  displayCave();
+  displayInstructions();
+}
+void optionC() {
+  printf("Cheating! Game elements are in the following rooms: \n"
+         "Player Wumpus Pit1 Pit2  \n"
+         "%4d %7d %5d %5d \n\n",
+         gameObjects[5], gameObjects[4], gameObjects[2], gameObjects[3]);
+}
+void optionM() {
+  validRoom = 0; // can't use a bool w/ the loop or it will override, use
+                 // incrementation of a variable instead
+  scanf(" %d", &desiredRoom);
+  for (int i = 0; i < 3; i++) { // checks if the desired room is adjacent to
+                                // player's current room
+    if (map[gameObjects[5]][i] == desiredRoom) {
+      validRoom++;
+    }
+  }
+  if (validRoom > 0) {            // if room is adjacent...
+    gameObjects[5] = desiredRoom; // move player to their desired room
+    moveCount++;                  // increment the move counter
+  } else { // if player room is not adjacent, have them input a valid move
+    printf("Invalid move.  Please retry. \n");
+  }
+}
+void optionG() {
+  printf("Enter room (1..20) you think Wumpus is in: ");
+  scanf("%d", &guess);
+  if (guess == gameObjects[4]) { // if guess is correct --> wins
+    printf("You won!\n");
+  }
+  if (guess !=
+      gameObjects[4]) { // if guess is incorrect --> loses and exits program
+    printf("You lost.\n");
+  }
+  printf("\nExiting Program ...\n");
+  return 0;
+}
 int main(void) {
 
   int gameObjects[6]; // 0 - bat, 1 - bat, 2 - pit1, 3 - pit2, 4 - wumpus, 5 -
@@ -107,7 +146,6 @@ int main(void) {
   char playerMove;
   int desiredRoom; // must check that player's move is valid before moving there
   int moveCount = 1; // counts number of player moves
- 
 
   int map[21][3] = {{0, 0, 0},    {2, 5, 8},    {1, 3, 10},  {2, 12, 4},
                     {3, 5, 15},   {1, 4, 6},    {5, 7, 15},  {6, 8, 17},
@@ -119,15 +157,11 @@ int main(void) {
   while (playerMove != 'x' && playerMove != 'X') {
     // display instructions
     if (playerMove == 'd' || playerMove == 'D') {
-      displayCave();
-      displayInstructions();
+      optionD();
     }
     // cheat, player can view game piece locations
     if (playerMove == 'c' || playerMove == 'C') {
-      printf("Cheating! Game elements are in the following rooms: \n"
-             "Player Wumpus Pit1 Pit2  \n"
-             "%4d %7d %5d %5d \n\n",
-             gameObjects[5], gameObjects[4], gameObjects[2], gameObjects[3]);
+      optionC();
     }
     // print cave layout
     if (playerMove == 'p' || playerMove == 'P') {
@@ -135,43 +169,20 @@ int main(void) {
     }
     // allow player to move to adjacent rooms
     if (playerMove == 'm' || playerMove == 'M') {
-      validRoom = 0; // can't use a bool w/ the loop or it will override, use
-                     // incrementation of a variable instead
-      scanf(" %d", &desiredRoom);
-      for (int i = 0; i < 3; i++) { // checks if the desired room is adjacent to
-                                    // player's current room
-        if (map[gameObjects[5]][i] == desiredRoom) {
-          validRoom++;
-        }
-      }
-      if (validRoom > 0) {            // if room is adjacent...
-        gameObjects[5] = desiredRoom; // move player to their desired room
-        moveCount++;                  // increment the move counter
-      } else { // if player room is not adjacent, have them input a valid move
-        printf("Invalid move.  Please retry. \n");
-      }
+      optionM();
     }
     // guess which room wumpus is in
     if (playerMove == 'g' || playerMove == 'G') {
-      printf("Enter room (1..20) you think Wumpus is in: ");
-      scanf("%d", &guess);
-      if (guess == gameObjects[4]) { // if guess is correct --> wins
-        printf("You won!\n");
-      }
-      if (guess !=
-          gameObjects[4]) { // if guess is incorrect --> loses and exits program
-        printf("You lost.\n");
-      }
-      printf("\nExiting Program ...\n");
-      return 0;
+      optionG();
     }
     // change location of game pieces
     if (playerMove == 'r' || playerMove == 'R') {
       printf("Enter the room locations (1..20) for player, wumpus, pit1, and "
              "pit2: \n"
              "\n");
-        scanf(" %d", &gameObjects);
-      }
+      scanf("%d %d %d %d", &gameObjects[5], &gameObjects[4], &gameObjects[2], &gameObjects[3]);
+      printf("%d %d %d %d", gameObjects[5], gameObjects[4], gameObjects[2], gameObjects[3]);
+    }
 
     // if wumpus room is even, player dies
     if (gameObjects[5] == gameObjects[4] && gameObjects[4] % 2 == 0) {
